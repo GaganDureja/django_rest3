@@ -24,18 +24,21 @@ def post_student(request):
     serializer.save()
     return Response({"status":200, "payload": serializer.data, "message": "Your data is saved"})
 
-@api_view(['PUT'])
-def update_student(request, id):
-    try:
-        student_obj = Student.objects.get(id=id)
-        serializer = StudentSerializer(student_obj, data = request.data)
-        if not serializer.is_valid():
-            return Response({"status":403, "errors":serializer.errors , "message": "Something went sent"})
+# @api_view(['PUT'])
 
-        serializer.save()
-        return Response({"status":200, "payload": serializer.data, "message": "Your data is saved"})
-    except Exception as e:        
-        return Response({'status':403, 'message':'Invalid ID'})
+# make new function name and url for this
+
+# def update_student(request, id):
+#     try:
+#         student_obj = Student.objects.get(id=id)
+#         serializer = StudentSerializer(student_obj, data = request.data)
+#         if not serializer.is_valid():
+#             return Response({"status":403, "errors":serializer.errors , "message": "Something went sent"})
+
+#         serializer.save()
+#         return Response({"status":200, "payload": serializer.data, "message": "Your data is saved"})
+#     except Exception as e:        
+#         return Response({'status':403, 'message':'Invalid ID'})
 
 
 @api_view(['PATCH'])
@@ -49,6 +52,7 @@ def update_student(request, id):
         serializer.save()
         return Response({"status":200, "payload": serializer.data, "message": "Your data is saved"})
     except Exception as e:        
+        print(e) 
         return Response({'status':403, 'message':'Invalid ID'})
     
 
