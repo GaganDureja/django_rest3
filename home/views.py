@@ -7,6 +7,16 @@ from .models import *
 from .serializers import *
 
 
+
+@api_view(['GET'])
+def get_book(request):
+    book_objs = Book.objects.all()
+    serializer = BookSerializer(book_objs, many=True)
+    # print(serializer.data,"fffffffffffffffffffffffff")
+
+    return Response({'status':200, 'payload':serializer.data})
+
+
 @api_view(['GET'])
 def home(request):
     student_objs = Student.objects.all()
