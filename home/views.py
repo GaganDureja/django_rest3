@@ -7,6 +7,7 @@ from .models import *
 from .serializers import *
 
 from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
 
 
 
@@ -19,14 +20,31 @@ def get_book(request):
 
     return Response({'status':200, 'payload':serializer.data})
 
+class ResgisterUser(APIView):
 
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if not serializer.is_valid():        
+            return Response({"status":403, "errors":serializer.errors , "message": "Something went sent"})
+
+        serializer.save()
+
+        user = User.objects.get(username= serializer.data['username'])
+        token_obj, created = Token.objects.get_or_create(user=user)
+        return Response({"status":200, "payload": serializer.data, "token":str(token_obj), "message": "Your data is saved"})
+    
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 class StudentAPI(APIView):
+
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     
     def get(self, request):
         student_objs = Student.objects.all()
         serializer = StudentSerializer(student_objs, many=True)    
-        return Response({"status":200, "payload":serializer.data})
+        return Response({"status":200,"Token User":str(request.user), "payload":serializer.data})
 
     def post(self, request):
         serializer = StudentSerializer(data = request.data)

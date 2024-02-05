@@ -7,6 +7,7 @@ from .views import *
 urlpatterns = [
     path('student/', StudentAPI.as_view()),
 
+    path('register/',ResgisterUser.as_view()),
 
     # path('', home),
     # path('student/', post_student),
