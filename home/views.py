@@ -120,6 +120,23 @@ class StudentAPI(APIView):
         except Exception as e:
             return Response({'status':403, 'message':'Invalid ID'})
 
+import datetime
+
+from helpers import save_pdf
+
+class GeneratePdf(APIView):
+    def get(self, request):
+        student_objs = Student.objects.all()
+        params = {
+            'taday' : datetime.date.today(),
+            'student_objs' : student_objs
+        }
+        file_name , status = save_pdf(params)
+
+        if not status:
+            return Response({'status':400})
+
+        return Response({"status":200, "path":f'/media/{file_name}.pdf'})
 
 
 
