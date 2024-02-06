@@ -138,7 +138,34 @@ class GeneratePdf(APIView):
 
         return Response({"status":200, "path":f'/media/{file_name}.pdf'})
 
+import pandas as pd
+from django.conf import settings
+import uuid
+class ExportImportExcel(APIView):
 
+    def get(self, request):
+        student_objs = Student.objects.all()
+        serializer = StudentSerializer(student_objs, many=True)
+        df = pd.DataFrame(serializer.data)
+        # serial number true
+        # df.to_csv(f"public/static/{uuid.uuid4()}.csv", encoding="UTF-8")
+        
+
+        df.to_csv(f"public/static/{uuid.uuid4()}.csv", encoding="UTF-8", index=False)
+        return Response({'status':200})
+    
+
+    def post(self, request):
+        excel_upload = ExcelFileUpload.objects.create(excel_file_upload= request.FILES['files'] )
+        df = pd.read_csv(f"{settings.BASE_DIR}/public/static/{excel_upload.excel_file_upload}")
+        for student in df.values.tolist():
+            Student.objects.create(
+                name = student[1],
+                age = student[2],
+                father_name = student[3]
+            )
+            # nameprint(student)
+        return Response({'status':200})
 
 
 

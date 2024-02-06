@@ -10,6 +10,7 @@ urlpatterns = [
     path('register/',ResgisterUser.as_view()),
 
     path('pdf/',GeneratePdf.as_view()),
+    path('excel/', ExportImportExcel.as_view()),
     
     path('generic-student/', StudentGeneric.as_view()),
     path('generic-student/<id>', StudentGenericID.as_view()),
