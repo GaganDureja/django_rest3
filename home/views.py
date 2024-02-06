@@ -122,7 +122,7 @@ class StudentAPI(APIView):
 
 import datetime
 
-from helpers import save_pdf
+from .helpers import save_pdf
 
 class GeneratePdf(APIView):
     def get(self, request):
