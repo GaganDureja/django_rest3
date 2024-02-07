@@ -59,11 +59,11 @@ class VerifyOtp(APIView):
             if not user_obj.exists():
                 return Response({'status':404, 'message':'Mobile number not valid'})
 
-
-            if send_otp_to_mobile(data.get('phone'), user_obj[0]):
+            status, time = send_otp_to_mobile(data.get('phone'), user_obj[0])
+            if status:
                 return Response({'status':200, 'message':'New otp sent'})
 
-            return Response({'status':404, 'message':'try after few seconds'})
+            return Response({'status':404, 'message': f'try after few seconds {time}'})
 
 
         except Exception as e:
