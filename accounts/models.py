@@ -3,9 +3,15 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .manager import UserManager
 
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.core.mail import send_mail
+import uuid
+
+from django.conf import settings
+
 # Create your models here.
-
-
 
 class User(AbstractUser):
     username = None
@@ -27,3 +33,19 @@ class User(AbstractUser):
     
     def __str__(self):
         return self.email
+    
+
+
+@receiver(post_save, sender=User)
+def send_email_token(sender, instance, created, **kwargs):
+    if created:
+        try:
+            subject = "Verify your Email"
+            message = f"Hi, click on the link to verify email http://127.0.0.1:8000/{uuid.uuid4()}"
+            email_from = settings.EMAIL_HOST_USER
+            
+            recipient_list = [instance.email]
+            send_mail(subject, message, email_from, recipient_list)
+            
+        except Exception as e:
+            print(e)
