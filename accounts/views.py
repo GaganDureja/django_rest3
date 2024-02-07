@@ -7,6 +7,9 @@ from .serializers import *
 from rest_framework.views import APIView
 
 
+from .helpers import *
+
+
 class RegisterView(APIView):
 
     def post(self, request):
@@ -26,3 +29,43 @@ class RegisterView(APIView):
         except Exception as e:
             print(e)
             return Response({'status':404, 'message': 'Something went wrong'})
+        
+
+
+class VerifyOtp(APIView):
+
+    def post(self, request):
+        try:
+            data = request.data
+            user_obj = User.objects.get(phone = data.get('phone'))
+            otp = data.get('otp')
+
+            if user_obj.otp == otp:
+                user_obj.is_phone_verified = True
+                user_obj.save()
+                return Response({'status':200, 'message':'Your phone is verified'})
+            
+            return Response({'status':403, 'message':'OTP incorrect'})
+
+        except Exception as e:
+            print(e)
+            return Response({'status':404, 'message':'Something went wrong'})
+
+
+    def patch(self, request):
+        try:
+            data = request.data
+            user_obj = User.objects.filter(phone= data.get('phone'))
+            if not user_obj.exists():
+                return Response({'status':404, 'message':'Mobile number not valid'})
+
+
+            if send_otp_to_mobile(data.get('phone'), user_obj[0]):
+                return Response({'status':200, 'message':'New otp sent'})
+
+            return Response({'status':404, 'message':'try after few seconds'})
+
+
+        except Exception as e:
+            print(e)
+            return Response({'status':404, 'message':'Something went wrong'})
