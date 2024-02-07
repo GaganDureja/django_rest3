@@ -28,6 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+AUTH_USER_MODEL = 'accounts.User'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'home',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'accounts'
 ]
 
 MIDDLEWARE = [
@@ -81,7 +84,7 @@ pymysql.install_as_MySQLdb()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':  'test_codekeen',        
+        'NAME':  'test_codekeen1',
         'USER': 'root',
         'PASSWORD': '',
         'HOST':'localhost',
@@ -199,3 +202,7 @@ STATICFILES_DIR = {
 
 MEDIA_ROOT =  os.path.join(BASE_DIR, 'public/static') 
 MEDIA_URL = '/media/'
+
+
+
+
