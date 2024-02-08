@@ -44,7 +44,7 @@ def send_email_token(sender, instance, created, **kwargs):
             message = f"Hi, click on the link to verify email http://127.0.0.1:8000/{uuid.uuid4()}"
             email_from = settings.EMAIL_HOST_USER
             
-            recipient_list = [instance.email]
+            recipient_list = [instance.email]            
             send_mail(subject, message, email_from, recipient_list)
             
         except Exception as e:
